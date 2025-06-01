@@ -13,9 +13,9 @@ with DAG(
     dag_id='sf_fire_daily_loader',
     default_args=default_args,
     description='DAG to download, transform, and load SF Fire Incidents data',
-    start_date=datetime(2025, 5, 25),
+    start_date=datetime(2025, 5, 1),
     schedule_interval='@daily',
-    catchup=True # This tells Airflow to run all missed intervals since start_date
+    catchup=False # This tells Airflow to run all missed intervals since start_date
 ) as dag:
 
     download_task = PythonOperator(
