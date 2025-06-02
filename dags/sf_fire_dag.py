@@ -30,10 +30,9 @@ with DAG(
         task_id='transform_fire_incidents',
         python_callable=transform_fire_incidents,
         op_args=[
-            "{{ ti.xcom_pull(task_ids='download_fire_incidents') }}",
-            "{{ ds }}"  # passes the execution date
+            "{{ ti.xcom_pull(task_ids='download_fire_incidents') }}"
         ],
-        provide_context=True
+        provide_context=True  # ensures kwargs includes 'ds' and others
     )
 
     download_task >> transform_task

@@ -47,7 +47,8 @@ subset_definitions = {
     ]
 }
 
-def transform_fire_incidents(raw_file_path, execution_date):
+def transform_fire_incidents(raw_file_path, **kwargs):
+    execution_date = kwargs['ds']  # or kwargs['execution_date']
     date_str = execution_date.replace('-', '')
     df_full = pd.read_csv(raw_file_path)
 
