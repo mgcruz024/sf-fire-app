@@ -2,6 +2,8 @@ from airflow import DAG
 from airflow.operators.python import PythonOperator
 from datetime import datetime
 from sf_fire_scripts.download_fire_incidents import download_fire_incidents
+from sf_fire_scripts.transform_fire_incidents import transform_fire_incidents
+
 
 default_args = {
     'owner': 'miguel',
@@ -23,3 +25,15 @@ with DAG(
         python_callable=download_fire_incidents,
         provide_context=True  # this allows Airflow to pass **kwargs
     )
+
+    transform_task = PythonOperator(
+        task_id='transform_fire_incidents',
+        python_callable=transform_fire_incidents,
+        op_args=[
+            "{{ ti.xcom_pull(task_ids='download_fire_incidents') }}",
+            "{{ ds }}"  # passes the execution date
+        ],
+        provide_context=True
+    )
+
+    download_task >> transform_task
